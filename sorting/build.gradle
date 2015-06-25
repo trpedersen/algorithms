@@ -8,7 +8,8 @@ repositories {
 }
 
 dependencies {
-	compile files('c:\\Users\\timpe_000\\Skydrive\\projects\\algorithms\\lib\\stdlib-package.jar')
+	//compile files('c:\\Users\\timpe_000\\Skydrive\\projects\\algorithms\\lib\\stdlib-package.jar')
+	compile files('../lib/stdlib-package.jar')
 	//compile 'commons-cli:commons-cli:1.3.1'
 	compile 'com.beust:jcommander:1.30'
 
