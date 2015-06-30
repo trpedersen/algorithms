@@ -80,69 +80,6 @@ public class HeapSort<Key extends Comparable<Key>> extends Sort {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-
-        Comparable a[] = null;
-        boolean showArray = false;
-        boolean sortInts = false;
-        boolean useStdIn = true;
-        int size = 0;
-        String file;
-
-        HeapSort<String> s = new HeapSort<String>();
-        new JCommander(s, args);
-
-
-//        if (s.asInt) {
-//            StdOut.println("sorting ints");
-//            a = Arrays.stream(StdIn.readAllInts()).boxed().toArray(Integer[]::new);
-//            size = a.length;
-//        } else {
-        StdOut.println("sorting strings");
-
-        InputStream is = null;
-
-        if (s.file != null) {
-            is = new FileInputStream(s.file);
-        } else {
-            is = System.in;
-        }
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        //String[] tokens = new String[30000000];
-        ArrayList<String> tokens = new ArrayList<String>(2000000);
-        int tokenCount = 0;
-        String token;
-        while ((token = reader.readLine()) != null) {
-            tokens.add(token);
-            tokenCount++;
-            if (tokenCount == 30000000) {
-                break;
-            }
-        }
-
-        a= new Comparable[0];
-        a = tokens.toArray(a);
-        size = a.length; // tokenCount; // == 0 ? 0  : tokenCount;
-//        }
-
-        StdOut.printf("data loaded, items: %d\n", size);
-        if (s.shuffle) {
-            StdOut.print("shuffling...");
-            s.shuffle(a, size);
-            StdOut.println("done");
-        }
-
-        Stopwatch sw = new Stopwatch();
-        s.sort(a);
-        double elapsed = sw.elapsedTime();
-        assert s.isSorted(a);
-        if (s.print) s.dump(a, size);
-        s.showStats(a, size);
-        StdOut.printf("elapsed: %f\n", elapsed);
-
-
-    }
 
     private void shuffle(Comparable[] a, int N) {
         for (int i = 0; i < N; i++) {

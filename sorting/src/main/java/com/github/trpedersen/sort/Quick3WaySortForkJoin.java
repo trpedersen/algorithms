@@ -58,13 +58,11 @@ public class Quick3WaySortForkJoin extends Sort {
         @Override
         protected void compute() {
 
-            if (hi - lo < 5000) {
+            if (hi - lo < 15) {
                 insertionSort(a, lo, hi);
                 //Arrays.sort(a, lo, hi+1);
                 return;
             }
-
-            // StdOut.printf("compute: lo: %d, hi:%d\n", lo, hi);
 
             if (hi <= lo) return;
 
@@ -104,75 +102,6 @@ public class Quick3WaySortForkJoin extends Sort {
         pool.invoke(new QuicksortTask(a, size));
     }
 
-    public static void main(String[] args) throws IOException {
-
-        Comparable a[] = null;
-        boolean showArray = false;
-        boolean sortInts = false;
-        boolean useStdIn = true;
-        int size = 0;
-        String file;
-
-        Quick3WaySortForkJoin s = new Quick3WaySortForkJoin();
-        new JCommander(s, args);
-
-
-        if (args.length > 0) {
-            List<String> opts = Arrays.asList(args);
-            if (opts.contains("-i")) {
-                sortInts = true;
-            }
-            if (opts.contains("-p")) {
-                showArray = true;
-            }
-            if (opts.contains("-f")) {
-                int i = opts.indexOf("-f");
-                file = opts.get(i + 1);
-                useStdIn = false;
-            }
-        }
-
-        if (s.asInt) {
-            StdOut.println("sorting ints");
-            a = Arrays.stream(StdIn.readAllInts()).boxed().toArray(Integer[]::new);
-            size = a.length;
-        } else {
-            StdOut.println("sorting strings");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            String[] tokens = new String[30000000];
-            int tokenCount = 0;
-            String token;
-            while ((token = reader.readLine()) != null) {
-                tokens[tokenCount] = token;
-                tokenCount++;
-                if (tokenCount == 30000000) {
-                    break;
-                }
-            }
-
-            a = tokens;
-            size = tokenCount;
-        }
-
-        StdOut.printf("data loaded, items: %d\n", size);
-        if (s.shuffle) {
-            StdOut.print("shuffling...");
-            s.shuffle(a, size);
-            StdOut.println("done");
-        }
-
-
-        Stopwatch sw = new Stopwatch();
-        s.sort(a, size);
-        double elapsed = sw.elapsedTime();
-        assert s.isSorted(a);
-        if (s.print) s.dump(a, size);
-        s.showStats(a, size);
-        StdOut.printf("elapsed: %f\n", elapsed);
-
-
-    }
 
     private void shuffle(Comparable[] a, int N) {
         for (int i = 0; i < N; i++) {

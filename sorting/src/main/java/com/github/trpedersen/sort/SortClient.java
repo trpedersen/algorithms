@@ -53,13 +53,15 @@ public class SortClient {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StreamTokenizer tokenizer = new StreamTokenizer(reader);
         while(tokenizer.nextToken() != StreamTokenizer.TT_EOF){
-            if(asInt && tokenizer.ttype == StreamTokenizer.TT_NUMBER){
-                list.add((int)tokenizer.nval);
-            } else {
-                list.add(tokenizer.sval);
+            switch(tokenizer.ttype){
+                case StreamTokenizer.TT_NUMBER:
+                    list.add(Double.toString(tokenizer.nval));
+                    break;
+                case StreamTokenizer.TT_WORD:
+                    list.add(tokenizer.sval);
+                    break;
             }
         }
-
         a = list.toArray(a);
         return a;
     }
@@ -113,14 +115,44 @@ public class SortClient {
         try {
 
 
+            Comparable[] data = null;
             Comparable a[] = null;
             StdOut.printf("loading data...");
             Stopwatch sw = new Stopwatch();
-            a = getData(1000000);
+            data = getData(25000000);
             double elapsed = sw.elapsedTime();
+            StdOut.printf("done, items: %d, time: %f\n", data.length, elapsed);
+
+            StdOut.printf("quick: sorting...");
+            a = new Comparable[data.length];
+            System.arraycopy(data, 0, a, 0, data.length);
+            sw = new Stopwatch();
+            Sort quicksort = new Quick3WaySort();
+            quicksort.sort(a);
+            elapsed = sw.elapsedTime();
             StdOut.printf("done, items: %d, time: %f\n", a.length, elapsed);
+           // show(a);
 
+//            StdOut.printf("merge: sorting...");
+//            System.arraycopy(data, 0, a, 0, data.length);
+//            sw = new Stopwatch();
+//            Sort mergesort = new MergeSort();
+//            mergesort.sort(a);
+//            elapsed = sw.elapsedTime();
+//            StdOut.printf("done, items: %d, time: %f\n", a.length, elapsed);
+//
+//            StdOut.printf("mergeBU: sorting...");
+//            System.arraycopy(data, 0, a, 0, data.length);
+//            sw = new Stopwatch();
+//            Sort mergebusort = new MergeBUSort();
+//            mergebusort.sort(a);
+//            elapsed = sw.elapsedTime();
+//            StdOut.printf("done, items: %d, time: %f\n", a.length, elapsed);
+           // dump(a);
 
+            if(print) {
+                dump(a);
+            }
 //
 //        Stopwatch sw = new Stopwatch();
 //        s.sort(a);
@@ -136,10 +168,35 @@ public class SortClient {
 
     }
 
-    public SortClient() {
+    public void show(Comparable[] a){
+        for(Comparable i : a){
+            StdOut.print(i + " ");
+        }
+        StdOut.println();
+
     }
 
+    public void show(Comparable[] a, int size){
+        for(int i = 0; i < size; i++){
+            StdOut.print(a[i] + " ");
+        }
+        StdOut.println();
 
+    }
+
+    public void dump(Comparable[] a){
+        dump(a, a.length);
+    }
+
+    public void dump(Comparable[] a, int size){
+        for(int i = 0; i < size; i++){
+            StdOut.println(a[i]);
+        }
+        StdOut.println();
+    }
+
+    public SortClient() {
+    }
 
     public static void main(String[] args) throws IOException {
 

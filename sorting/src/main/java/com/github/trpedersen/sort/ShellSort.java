@@ -28,40 +28,4 @@ public class ShellSort extends Sort {
         }
 
     }
-
-    public static void main(String[] args) {
-
-        Comparable a[] = null;
-        boolean showArray = false;
-        boolean sortInts = false;
-
-        if (args.length > 0) {
-            List<String> opts = Arrays.asList(args);
-            if (opts.contains("-i")) {
-                sortInts = true;
-            }
-            if (opts.contains("-p")) {
-                showArray = true;
-            }
-        }
-        if (sortInts) {
-            StdOut.println("sorting ints");
-            a = Arrays.stream(StdIn.readAllInts()).boxed().toArray(Integer[]::new);
-        } else {
-            StdOut.println("sorting strings");
-            a = StdIn.readAllStrings();
-        }
-
-        ShellSort s = new ShellSort();
-
-        Stopwatch sw = new Stopwatch();
-        s.sort(a);
-        double elapsed = sw.elapsedTime();
-        assert s.isSorted(a);
-        if (showArray) s.show(a);
-        s.showStats(a);
-        StdOut.printf("elapsed: %f\n", elapsed);
-
-
-    }
 }
