@@ -1,10 +1,12 @@
 package com.github.trpedersen.sort;
 
-public class MergeBUSort extends Sort {
+import java.util.Comparator;
 
-    private static Comparable[] aux;
+public class MergeBUSort<Key extends Comparable<Key>> extends Sort<Key> {
 
-    public void merge(Comparable[] a, int lo, int mid, int hi) {
+    private Key[] aux;
+
+    public void merge(Key[] a, int lo, int mid, int hi) {
         int i = lo, j = mid + 1;
 
         System.arraycopy(a, lo, aux, lo, (hi-lo+1));
@@ -22,13 +24,13 @@ public class MergeBUSort extends Sort {
         }
     }
 
-    public void sort(Comparable[] a) {
+    public void sort(Key[] a) {
         int N = a.length;
         sort(a, N);
     }
 
-    public void sort(Comparable[] a, int N) {
-        aux = new Comparable[a.length];
+    public void sort(Key[] a, int N) {
+        aux = (Key[]) new Comparable[a.length];
         for (int sz = 1; sz < N; sz = sz + sz) {
             for (int lo = 0; lo < N - sz; lo += sz + sz) {
                 merge(a, lo, lo+sz-1, Math.min(lo+sz+sz-1, N-1));
@@ -36,7 +38,7 @@ public class MergeBUSort extends Sort {
         }
     }
 
-    private void sort(Comparable[] a, int lo, int hi) {
+    private void sort(Key[] a, int lo, int hi) {
         if (hi <= lo)
             return;
         int mid = lo + (hi - lo) / 2;

@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by timpe_000 on 28/06/2015.
  */
-public class SortClient {
+public class SortClient<Key extends Comparable<Key>> {
 
     @Parameter(names = "-a", description = "algorithm: insertion, selection, merge, quick, shell, heap")
     private List<String> algorithms = new ArrayList<String>();
@@ -40,15 +40,15 @@ public class SortClient {
     InputStream inputStream = null;
 
 
-    private Comparable[] getData(int initialSize) throws IOException {
-        Comparable[] a = new Comparable[0];
+    private String[] getData(int initialSize) throws IOException {
+        String[] a =  new String[0];
 
         if (inputFile != null) {
             inputStream = new FileInputStream(inputFile);
         } else {
             inputStream = System.in;
         }
-        List<Comparable> list = new ArrayList<Comparable>();
+        List<String> list = new ArrayList<String>();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StreamTokenizer tokenizer = new StreamTokenizer(reader);
@@ -66,44 +66,44 @@ public class SortClient {
         return a;
     }
 
-    private Comparable[] getData2(int initialSize) throws IOException {
-
-        Comparable[] a = new Comparable[0];
-        String token;
-        Writer fw = null;
-        BufferedWriter writer = null;
-
-        if (inputFile != null) {
-            inputStream = new FileInputStream(inputFile);
-        } else {
-            inputStream = System.in;
-        }
-
-        if(outputFile != null){
-            fw = new FileWriter(outputFile);
-            writer = new BufferedWriter(fw);
-        }
-        List<Comparable> list = new ArrayList<Comparable>();
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        StandardTokenizer tokenizer = new StandardTokenizer();
-        tokenizer.setReader(reader);
-        tokenizer.reset();
-
-        while(tokenizer.incrementToken()){
-            token = ((CharTermAttribute)tokenizer.getAttribute(CharTermAttribute.class)).toString();
-            if(writer != null){
-                writer.write(token);
-                writer.write("\n");
-            }
-            list.add(token);
-        }
-        tokenizer.end();
-        tokenizer.close();
-
-        a = list.toArray(a);
-        return a;
-    }
+//    private Comparable[] getData2(int initialSize) throws IOException {
+//
+//        Comparable[] a = new Comparable[0];
+//        String token;
+//        Writer fw = null;
+//        BufferedWriter writer = null;
+//
+//        if (inputFile != null) {
+//            inputStream = new FileInputStream(inputFile);
+//        } else {
+//            inputStream = System.in;
+//        }
+//
+//        if(outputFile != null){
+//            fw = new FileWriter(outputFile);
+//            writer = new BufferedWriter(fw);
+//        }
+//        List<Comparable> list = new ArrayList<Comparable>();
+//
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+//        StandardTokenizer tokenizer = new StandardTokenizer();
+//        tokenizer.setReader(reader);
+//        tokenizer.reset();
+//
+//        while(tokenizer.incrementToken()){
+//            token = ((CharTermAttribute)tokenizer.getAttribute(CharTermAttribute.class)).toString();
+//            if(writer != null){
+//                writer.write(token);
+//                writer.write("\n");
+//            }
+//            list.add(token);
+//        }
+//        tokenizer.end();
+//        tokenizer.close();
+//
+//        a = list.toArray(a);
+//        return a;
+//    }
 
     public void run()  {
 
@@ -115,19 +115,19 @@ public class SortClient {
         try {
 
 
-            Comparable[] data = null;
-            Comparable a[] = null;
+            Key[] data = null;
+            String a[] = null;
             StdOut.printf("loading data...");
             Stopwatch sw = new Stopwatch();
-            data = getData(25000000);
+            data = (Key[]) getData(25000000);
             double elapsed = sw.elapsedTime();
             StdOut.printf("done, items: %d, time: %f\n", data.length, elapsed);
 
             StdOut.printf("quick: sorting...");
-            a = new Comparable[data.length];
+            a =  new String[data.length];
             System.arraycopy(data, 0, a, 0, data.length);
             sw = new Stopwatch();
-            Sort quicksort = new Quick3WaySort();
+            Sort<String> quicksort = new Quick3WaySort<String>();
             quicksort.sort(a);
             elapsed = sw.elapsedTime();
             StdOut.printf("done, items: %d, time: %f\n", a.length, elapsed);

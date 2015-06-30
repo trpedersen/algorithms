@@ -11,20 +11,20 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class QuickSort extends Sort {
+public class QuickSort<Key extends Comparable<Key>> extends Sort<Key> {
 
 
-    public void sort(Comparable[] a) {
+    public void sort(Key[] a) {
         int N = a.length;
         sort(a, 0, N - 1);
     }
 
-    public void sort(Comparable[] a, int size) {
+    public void sort(Key[] a, int size) {
         int N = size;
         sort(a, 0, N - 1);
     }
 
-    private void sort(Comparable[] a, int lo, int hi) {
+    private void sort(Key[] a, int lo, int hi) {
         if (hi <= lo + 15){
             insertionSort(a, lo, hi);
             return;
@@ -34,7 +34,7 @@ public class QuickSort extends Sort {
         sort(a, j + 1, hi);
     }
 
-    private void insertionSort(Comparable[] a, int lo, int hi){
+    private void insertionSort(Key[] a, int lo, int hi){
         for (int i = lo; i <= hi; i++){
             for (int j = i; j > lo && less(a[j], a[j-1]); j--){
                 exchange(a, j, j-1);
@@ -42,10 +42,10 @@ public class QuickSort extends Sort {
         }
     }
 
-    private int partition(Comparable[] a, int lo, int hi) {
+    private int partition(Key[] a, int lo, int hi) {
         // partition into a[lo..j-1], a[j], a[j+1..hi] and return j
         int i = lo, j = hi + 1; // left and right scan indices
-        Comparable v = a[lo];
+        Key v = a[lo];
         while (true) {
             // scan right, scan left, check for scan complete, and exchange
             while (less(a[++i], v)) if (i == hi) break;

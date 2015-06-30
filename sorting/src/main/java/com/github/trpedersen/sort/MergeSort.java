@@ -1,15 +1,12 @@
 package com.github.trpedersen.sort;
 
-public class MergeSort extends Sort {
+public class MergeSort<Key extends Comparable<Key>> extends Sort<Key> {
 
-    private static Comparable[] aux;
+    private Key[] aux;
 
-    public void merge(Comparable[] a, int lo, int mid, int hi) {
+    public void merge(Key[] a, int lo, int mid, int hi) {
         int i = lo, j = mid + 1;
 
-//        for (int k = lo; k <= hi; k++) {
-//            aux[k] = a[k];
-//        }
         System.arraycopy(a, lo, aux, lo, (hi-lo+1));
 
         for (int k = lo; k <= hi; k++) {
@@ -25,18 +22,17 @@ public class MergeSort extends Sort {
         }
     }
 
-    public void sort(Comparable[] a) {
+    public void sort(Key[] a) {
         int N = a.length;
-        aux = new Comparable[a.length];
         sort(a, 0, N-1);
     }
 
-    public void sort(Comparable[] a, int size) {
-        aux = new Comparable[size];
+    public void sort(Key[] a, int size) {
+        aux = (Key[]) new Comparable[size];
         sort(a, 0, size-1);
     }
 
-    private void sort(Comparable[] a, int lo, int hi){
+    private void sort(Key[] a, int lo, int hi){
         if(hi <= lo)
             return;
         int mid = lo + (hi-lo)/2;

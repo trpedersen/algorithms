@@ -1,36 +1,40 @@
 package com.github.trpedersen.sort;
 
-import edu.princeton.cs.introcs.*;
+import edu.princeton.cs.introcs.StdOut;
 
-public abstract class Sort {
+public abstract class Sort<Key extends Comparable<Key>> {
 
-    abstract void sort(Comparable[] a);
+    abstract void sort(Key[] a);
 
     protected long compares = 0;
     protected long exchanges = 0;
 
-    protected boolean less(Comparable v, Comparable w){
+    protected boolean less(Key v, Key w){
         compares++;
-        return v.compareTo(w) < 0;
+        return v.compareTo((Key) w) < 0;
     }
 
     public long getCompares() {
         return compares;
     }
 
-    protected void exchange(Comparable[] a, int i, int j){
+    protected void exchange(Key[] a, int i, int j){
         exchanges++;
         if(a[i] == null || a[j] == null){
             return;
         }
-        Comparable t = a[i]; a[i] = a[j]; a[j] = t;
-        if(a[i] == null || a[j] == null){
-            return;
-        }
+        Key t = a[i]; a[i] = a[j]; a[j] = t;
     }
 
     public long getExchanges() {
         return exchanges;
+    }
+
+    private void shuffle(Key[] a, int N) {
+        for (int i = 0; i < N; i++) {
+            int r = i + (int) (Math.random() * (N - i)); // between i and N-1;
+            exchange(a, i, r);
+        }
     }
 
     public void reset(){
@@ -38,18 +42,19 @@ public abstract class Sort {
         compares = 0;
     }
 
-
-    public void showStats(Comparable[] a){
+    public void showStats(Key[] a){
         StdOut.printf("items: %d, compares: %d, exchanges: %d\n", a.length, compares, exchanges);
     }
 
-    public void showStats(Comparable[] a, int size){
+    public void showStats(Key[] a, int size){
         StdOut.printf("items: %d, compares: %d, exchanges: %d\n", size, compares, exchanges);
     }
 
-    public boolean isSorted(Comparable[] a){
+    public boolean isSorted(Key[] a){
         for(int i = 1; i < a.length; i++){
-            if(less(a[i], a[i-1])) return false;
+            if(less(a[i], a[i-1])) {
+                return false;
+            }
         }
         return true;
     }
