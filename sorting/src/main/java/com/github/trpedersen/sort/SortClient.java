@@ -137,14 +137,14 @@ public class SortClient {
         }
 
         if (asInt) {
-            sortIntegerData();
+            sortIntegerFile();
         } else {
-            sortStringData();
+            sortStringFile();
         }
 
     }
 
-    private void sortStringData(){
+    private void sortStringFile(){
         try {
             String[] data = null;
             String[] a = null;
@@ -221,7 +221,7 @@ public class SortClient {
 
     }
 
-    private void sortIntegerData(){
+    private void sortIntegerFile(){
         try {
             Integer[] data = null;
             Integer[] a = null;

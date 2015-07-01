@@ -16,7 +16,7 @@ public class HeapSort<Key extends Comparable<? super Key>> extends Sort<Key> {
     }
 
     private void swim(Key[] a, int k) {
-        // bubble k up the tree until it is not less that it' parent
+        // bubble k up the tree until it is not less that it's parent
         // or until it is at the root
         while (k > 1 && less(a, k / 2, k)) {
             exchange(a, k / 2, k);
