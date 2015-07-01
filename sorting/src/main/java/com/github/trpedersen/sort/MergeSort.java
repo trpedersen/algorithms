@@ -1,6 +1,6 @@
 package com.github.trpedersen.sort;
 
-public class MergeSort<Key extends Comparable<Key>> extends Sort<Key> {
+public class MergeSort<Key extends Comparable<? super Key>> extends Sort<Key> {
 
     private Key[] aux;
 

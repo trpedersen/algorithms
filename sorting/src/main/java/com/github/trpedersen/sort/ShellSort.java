@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class ShellSort<Key extends Comparable<Key>> extends Sort<Key> {
+public class ShellSort<Key extends Comparable<? super Key>> extends Sort<Key> {
 
     public void sort(Key[] a) {
         int N = a.length;

@@ -3,10 +3,7 @@ package com.github.trpedersen.sort;
 import edu.princeton.cs.introcs.StdIn;
 import edu.princeton.cs.introcs.StdOut;
 
-/**
- * Created by timpe_000 on 27/06/2015.
- */
-public class MaxPQ<Key extends Comparable<Key>> {
+public class MaxPQ<Key extends Comparable<? super Key>> {
 
     private Key[] pq; // heap ordered complete binary tree
     private int N = 0; // in pq[1..N] with pq[0] unused

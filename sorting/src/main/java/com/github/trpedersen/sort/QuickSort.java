@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class QuickSort<Key extends Comparable<Key>> extends Sort<Key> {
+public class QuickSort<Key extends Comparable<? super Key>> extends Sort<Key> {
 
 
     public void sort(Key[] a) {

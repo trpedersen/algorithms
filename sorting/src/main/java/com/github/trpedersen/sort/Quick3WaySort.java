@@ -1,6 +1,6 @@
 package com.github.trpedersen.sort;
 
-public class Quick3WaySort<Key extends Comparable<Key>> extends Sort<Key> {
+public class Quick3WaySort<Key extends Comparable<? super Key>> extends Sort<Key> {
 
     public void sort(Key[] a) {
         int N = a.length;

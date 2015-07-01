@@ -41,7 +41,7 @@ public class SortClient {
 
     Comparable[] data = null;
 
-    private Comparable<String>[] getStringData(int initialSize) throws IOException {
+    private String[] getStringData(int initialSize) throws IOException {
         String[] result = new String[0];
 
         if (inputFile != null) {
@@ -81,7 +81,7 @@ public class SortClient {
         while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
             switch (tokenizer.ttype) {
                 case StreamTokenizer.TT_NUMBER:
-                    list.add((int)tokenizer.nval);
+                    list.add((int) tokenizer.nval);
                     break;
                 default:
                     break;
@@ -136,30 +136,33 @@ public class SortClient {
             return;
         }
 
+        if (asInt) {
+            sortIntegerData();
+        } else {
+            sortStringData();
+        }
+
+    }
+
+    private void sortStringData(){
         try {
-
-
-            Comparable[] data = null;
-            Comparable a[] = null;
+            String[] data = null;
+            String[] a = null;
             StdOut.printf("loading data...");
             Stopwatch sw = new Stopwatch();
-            if(asInt) {
-                data = getIntegerData(25000000);
-            } else {
-                data = getStringData(2500000);
-            }
+            data = getStringData(2500000);
             double elapsed = sw.elapsedTime();
             StdOut.printf("done, items: %d, time: %f\n", data.length, elapsed);
 
             for (String algorithm : algorithms) {
                 Sort<String> sort = null;
-                a = new Comparable[data.length];
+                a = new String[data.length];
                 System.arraycopy(data, 0, a, 0, data.length);
                 sw = new Stopwatch();
                 switch (algorithm.toLowerCase()) {
                     case "quick3waysort":
                         StdOut.printf("quick 3 way sort: sorting...");
-                        sort = new Quick3WaySort<?>();
+                        sort = new Quick3WaySort<String>();
                         sort.sort(a);
                         break;
                     case "quicksort":
@@ -217,6 +220,84 @@ public class SortClient {
         }
 
     }
+
+    private void sortIntegerData(){
+        try {
+            Integer[] data = null;
+            Integer[] a = null;
+            StdOut.printf("loading data...");
+            Stopwatch sw = new Stopwatch();
+            data = getIntegerData(2500000);
+            double elapsed = sw.elapsedTime();
+            StdOut.printf("done, items: %d, time: %f\n", data.length, elapsed);
+
+            for (String algorithm : algorithms) {
+                Sort<Integer> sort = null;
+                a = new Integer[data.length];
+                System.arraycopy(data, 0, a, 0, data.length);
+                sw = new Stopwatch();
+                switch (algorithm.toLowerCase()) {
+                    case "quick3waysort":
+                        StdOut.printf("quick 3 way sort: sorting...");
+                        sort = new Quick3WaySort<Integer>();
+                        sort.sort(a);
+                        break;
+                    case "quicksort":
+                        StdOut.printf("quick sort: sorting...");
+                        sort = new QuickSort<Integer>();
+                        sort.sort(a);
+                        break;
+                    case "mergesort":
+                        StdOut.printf("merge sort: sorting...");
+                        sort = new MergeSort<Integer>();
+                        sort.sort(a);
+                        break;
+                    case "mergebusort":
+                        StdOut.printf("mergeBU sort: sorting...");
+                        sort = new MergeBUSort<Integer>();
+                        sort.sort(a);
+                        break;
+                    case "heapsort":
+                        StdOut.printf("heap sort: sorting...");
+                        sort = new HeapSort<Integer>();
+                        sort.sort(a);
+                        break;
+                    case "shellsort":
+                        StdOut.printf("shell sort: sorting...");
+                        sort = new ShellSort<Integer>();
+                        sort.sort(a);
+                        break;
+                    case "selectionsort":
+                        StdOut.printf("selection sort: sorting...");
+                        sort = new SelectionSort<Integer>();
+                        sort.sort(a);
+                        break;
+                    case "insertionsort":
+                        StdOut.printf("insertion sort: sorting...");
+                        sort = new InsertionSort<Integer>();
+                        sort.sort(a);
+                        break;
+                    default:
+                        StdOut.println("Unknown algorithm: " + algorithm);
+                        break;
+                }
+//
+                if (sort != null) {
+                    elapsed = sw.elapsedTime();
+                    StdOut.printf("done, items: %d, time: %f, compares: %d, exchanges: %d\n"
+                            , a.length, elapsed, sort.compares, sort.exchanges);
+                    if (print) {
+                        dump(a);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+        }
+
+    }
+
 
     public void show(Comparable[] a) {
         for (Comparable i : a) {

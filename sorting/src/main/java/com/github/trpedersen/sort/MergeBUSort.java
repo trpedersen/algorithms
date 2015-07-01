@@ -2,7 +2,7 @@ package com.github.trpedersen.sort;
 
 import java.util.Comparator;
 
-public class MergeBUSort<Key extends Comparable<Key>> extends Sort<Key> {
+public class MergeBUSort<Key extends Comparable<? super Key>> extends Sort<Key> {
 
     private Key[] aux;
 

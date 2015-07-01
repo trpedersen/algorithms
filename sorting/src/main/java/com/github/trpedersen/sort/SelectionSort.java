@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * Created by timpe_000 on 19/06/2015.
  */
-public class SelectionSort<Key extends Comparable<Key>> extends Sort<Key> {
+public class SelectionSort<Key extends Comparable<? super Key>> extends Sort<Key> {
 
     void sort(Key[] a) {
         int N = a.length;

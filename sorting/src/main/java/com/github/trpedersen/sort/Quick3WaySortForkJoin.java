@@ -18,7 +18,7 @@ import java.util.concurrent.RecursiveAction;
 //import org.apache.commons.cli.*;
 
 
-public class Quick3WaySortForkJoin<Key extends Comparable<Key>> extends Sort<Key> {
+public class Quick3WaySortForkJoin<Key extends Comparable<? super Key>> extends Sort<Key> {
 
     private class QuicksortTask extends RecursiveAction {
 

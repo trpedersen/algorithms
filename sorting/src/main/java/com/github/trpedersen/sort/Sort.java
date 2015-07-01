@@ -2,7 +2,7 @@ package com.github.trpedersen.sort;
 
 import edu.princeton.cs.introcs.StdOut;
 
-public abstract class Sort<Key extends Comparable<Key>> {
+public abstract class Sort<Key extends Comparable<? super Key>> {
 
     abstract void sort(Key[] a);
 

@@ -1,6 +1,6 @@
 package com.github.trpedersen.sort;
 
-public class InsertionSort<Key extends Comparable<Key>> extends Sort<Key> {
+public class InsertionSort<Key extends Comparable<? super Key>> extends Sort<Key> {
 
     public void sort1(Key[] a) {
         int N = a.length;

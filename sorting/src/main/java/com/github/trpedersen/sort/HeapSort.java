@@ -1,6 +1,6 @@
 package com.github.trpedersen.sort;
 
-public class HeapSort<Key extends Comparable<Key>> extends Sort<Key> {
+public class HeapSort<Key extends Comparable<? super Key>> extends Sort<Key> {
 
     private boolean less(Key[] a, int i, int j) {
         compares++;
