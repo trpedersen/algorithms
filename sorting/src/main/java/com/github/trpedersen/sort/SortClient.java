@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by timpe_000 on 28/06/2015.
  */
-public class SortClient<Key extends Comparable<Key>> {
+public class SortClient {
 
     @Parameter(names = "-a", description = "algorithm: insertion, selection, merge, quick, shell, heap")
     private List<String> algorithms = new ArrayList<String>();
@@ -39,21 +39,22 @@ public class SortClient<Key extends Comparable<Key>> {
 
     InputStream inputStream = null;
 
+    Comparable[] data = null;
 
-    private String[] getData(int initialSize) throws IOException {
-        String[] a =  new String[0];
+    private Comparable<String>[] getStringData(int initialSize) throws IOException {
+        String[] result = new String[0];
 
         if (inputFile != null) {
             inputStream = new FileInputStream(inputFile);
         } else {
             inputStream = System.in;
         }
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<String>(initialSize);
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StreamTokenizer tokenizer = new StreamTokenizer(reader);
-        while(tokenizer.nextToken() != StreamTokenizer.TT_EOF){
-            switch(tokenizer.ttype){
+        while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
+            switch (tokenizer.ttype) {
                 case StreamTokenizer.TT_NUMBER:
                     list.add(Double.toString(tokenizer.nval));
                     break;
@@ -62,8 +63,31 @@ public class SortClient<Key extends Comparable<Key>> {
                     break;
             }
         }
-        a = list.toArray(a);
-        return a;
+        return list.toArray(result);
+    }
+
+    private Integer[] getIntegerData(int initialSize) throws IOException {
+        Integer[] result = new Integer[0];
+
+        if (inputFile != null) {
+            inputStream = new FileInputStream(inputFile);
+        } else {
+            inputStream = System.in;
+        }
+        List<Integer> list = new ArrayList<Integer>(initialSize);
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StreamTokenizer tokenizer = new StreamTokenizer(reader);
+        while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
+            switch (tokenizer.ttype) {
+                case StreamTokenizer.TT_NUMBER:
+                    list.add((int)tokenizer.nval);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return list.toArray(result);
     }
 
 //    private Comparable[] getData2(int initialSize) throws IOException {
@@ -105,9 +129,9 @@ public class SortClient<Key extends Comparable<Key>> {
 //        return a;
 //    }
 
-    public void run()  {
+    public void run() {
 
-        if(algorithms.size() == 0){
+        if (algorithms.size() == 0) {
             StdOut.println("Must specify at least one algorithm");
             return;
         }
@@ -115,52 +139,78 @@ public class SortClient<Key extends Comparable<Key>> {
         try {
 
 
-            Key[] data = null;
-            String a[] = null;
+            Comparable[] data = null;
+            Comparable a[] = null;
             StdOut.printf("loading data...");
             Stopwatch sw = new Stopwatch();
-            data = (Key[]) getData(25000000);
+            if(asInt) {
+                data = getIntegerData(25000000);
+            } else {
+                data = getStringData(2500000);
+            }
             double elapsed = sw.elapsedTime();
             StdOut.printf("done, items: %d, time: %f\n", data.length, elapsed);
 
-            StdOut.printf("quick: sorting...");
-            a =  new String[data.length];
-            System.arraycopy(data, 0, a, 0, data.length);
-            sw = new Stopwatch();
-            Sort<String> quicksort = new Quick3WaySort<String>();
-            quicksort.sort(a);
-            elapsed = sw.elapsedTime();
-            StdOut.printf("done, items: %d, time: %f\n", a.length, elapsed);
-           // show(a);
-
-//            StdOut.printf("merge: sorting...");
-//            System.arraycopy(data, 0, a, 0, data.length);
-//            sw = new Stopwatch();
-//            Sort mergesort = new MergeSort();
-//            mergesort.sort(a);
-//            elapsed = sw.elapsedTime();
-//            StdOut.printf("done, items: %d, time: %f\n", a.length, elapsed);
+            for (String algorithm : algorithms) {
+                Sort<String> sort = null;
+                a = new Comparable[data.length];
+                System.arraycopy(data, 0, a, 0, data.length);
+                sw = new Stopwatch();
+                switch (algorithm.toLowerCase()) {
+                    case "quick3waysort":
+                        StdOut.printf("quick 3 way sort: sorting...");
+                        sort = new Quick3WaySort<?>();
+                        sort.sort(a);
+                        break;
+                    case "quicksort":
+                        StdOut.printf("quick sort: sorting...");
+                        sort = new QuickSort<String>();
+                        sort.sort(a);
+                        break;
+                    case "mergesort":
+                        StdOut.printf("merge sort: sorting...");
+                        sort = new MergeSort<String>();
+                        sort.sort(a);
+                        break;
+                    case "mergebusort":
+                        StdOut.printf("mergeBU sort: sorting...");
+                        sort = new MergeBUSort<String>();
+                        sort.sort(a);
+                        break;
+                    case "heapsort":
+                        StdOut.printf("heap sort: sorting...");
+                        sort = new HeapSort<String>();
+                        sort.sort(a);
+                        break;
+                    case "shellsort":
+                        StdOut.printf("shell sort: sorting...");
+                        sort = new ShellSort<String>();
+                        sort.sort(a);
+                        break;
+                    case "selectionsort":
+                        StdOut.printf("selection sort: sorting...");
+                        sort = new SelectionSort<String>();
+                        sort.sort(a);
+                        break;
+                    case "insertionsort":
+                        StdOut.printf("insertion sort: sorting...");
+                        sort = new InsertionSort<String>();
+                        sort.sort(a);
+                        break;
+                    default:
+                        StdOut.println("Unknown algorithm: " + algorithm);
+                        break;
+                }
 //
-//            StdOut.printf("mergeBU: sorting...");
-//            System.arraycopy(data, 0, a, 0, data.length);
-//            sw = new Stopwatch();
-//            Sort mergebusort = new MergeBUSort();
-//            mergebusort.sort(a);
-//            elapsed = sw.elapsedTime();
-//            StdOut.printf("done, items: %d, time: %f\n", a.length, elapsed);
-           // dump(a);
-
-            if(print) {
-                dump(a);
+                if (sort != null) {
+                    elapsed = sw.elapsedTime();
+                    StdOut.printf("done, items: %d, time: %f, compares: %d, exchanges: %d\n"
+                            , a.length, elapsed, sort.compares, sort.exchanges);
+                    if (print) {
+                        dump(a);
+                    }
+                }
             }
-//
-//        Stopwatch sw = new Stopwatch();
-//        s.sort(a);
-//        double elapsed = sw.elapsedTime();
-//        assert s.isSorted(a);
-//        if (s.print) s.dump(a, size);
-//        s.showStats(a, size);
-//        StdOut.printf("elapsed: %f\n", elapsed);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -168,28 +218,28 @@ public class SortClient<Key extends Comparable<Key>> {
 
     }
 
-    public void show(Comparable[] a){
-        for(Comparable i : a){
+    public void show(Comparable[] a) {
+        for (Comparable i : a) {
             StdOut.print(i + " ");
         }
         StdOut.println();
 
     }
 
-    public void show(Comparable[] a, int size){
-        for(int i = 0; i < size; i++){
+    public void show(Comparable[] a, int size) {
+        for (int i = 0; i < size; i++) {
             StdOut.print(a[i] + " ");
         }
         StdOut.println();
 
     }
 
-    public void dump(Comparable[] a){
+    public void dump(Comparable[] a) {
         dump(a, a.length);
     }
 
-    public void dump(Comparable[] a, int size){
-        for(int i = 0; i < size; i++){
+    public void dump(Comparable[] a, int size) {
+        for (int i = 0; i < size; i++) {
             StdOut.println(a[i]);
         }
         StdOut.println();

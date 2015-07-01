@@ -24,7 +24,7 @@ public class MergeSort<Key extends Comparable<Key>> extends Sort<Key> {
 
     public void sort(Key[] a) {
         int N = a.length;
-        sort(a, 0, N-1);
+        sort(a, N-1);
     }
 
     public void sort(Key[] a, int size) {

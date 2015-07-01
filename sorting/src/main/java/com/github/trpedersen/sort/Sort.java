@@ -20,9 +20,6 @@ public abstract class Sort<Key extends Comparable<Key>> {
 
     protected void exchange(Key[] a, int i, int j){
         exchanges++;
-        if(a[i] == null || a[j] == null){
-            return;
-        }
         Key t = a[i]; a[i] = a[j]; a[j] = t;
     }
 
