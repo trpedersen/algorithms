@@ -170,6 +170,11 @@ public class SortClient {
                         sort = new QuickSort<String>();
                         sort.sort(a);
                         break;
+                    case "quicksortforkjoin":
+                        StdOut.printf("quick sort: sorting...");
+                        sort = new Quick3WaySortForkJoin<String>();
+                        sort.sort(a);
+                        break;
                     case "mergesort":
                         StdOut.printf("merge sort: sorting...");
                         sort = new MergeSort<String>();
@@ -245,6 +250,11 @@ public class SortClient {
                     case "quicksort":
                         StdOut.printf("quick sort: sorting...");
                         sort = new QuickSort<Integer>();
+                        sort.sort(a);
+                        break;
+                    case "quicksortforkjoin":
+                        StdOut.printf("quick sort fork/join: sorting...");
+                        sort = new Quick3WaySortForkJoin<Integer>();
                         sort.sort(a);
                         break;
                     case "mergesort":
