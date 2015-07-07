@@ -28,7 +28,7 @@ task fatJar(type: Jar) {
 	manifest {
 		attributes 'Implementation-Title': 'QuickSort',
 				'Implementation-Version': version,
-				'Main-Class': 'com.github.trpedersen.sort.HeapSort'
+				'Main-Class': 'com.github.trpedersen.search.FrequencyCounter'
 	}
 	baseName = project.name + '-all'
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
