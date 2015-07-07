@@ -22,8 +22,13 @@ public class Quick3WaySort<Key extends Comparable<? super Key>> extends Sort<Key
         Key v = a[lo];
         while (i <= gt) {
             int cmp = a[i].compareTo(v);
-            if (cmp < 0) exchange(a, lt++, i++);
-            else if (cmp > 0) exchange(a, i, gt--);
+            compares++;
+            if (cmp < 0) {
+                exchange(a, lt++, i++);
+            }
+            else if (cmp > 0) {
+                exchange(a, i, gt--);
+            }
             else i++;
         }
         // now a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi]

@@ -57,7 +57,7 @@ public class Quick3WaySortForkJoin<Key extends Comparable<? super Key>> extends 
             Key v = a[lo];
             while (i <= gt) {
                 int cmp = a[i].compareTo(v);
-                if (cmp < 0) exchange(a, lt++, i++);
+                    if (cmp < 0) exchange(a, lt++, i++);
                 else if (cmp > 0) exchange(a, i, gt--);
                 else i++;
                 compares++;
