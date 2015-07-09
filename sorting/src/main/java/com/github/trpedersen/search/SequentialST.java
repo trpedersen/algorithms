@@ -5,7 +5,8 @@ import java.util.Iterator;
 /**
  * Created by timpe_000 on 7/07/2015.
  */
-public class SequentialSearchST<Key, Value> {
+public class SequentialST<Key extends Comparable<? super Key>, Value>
+        implements ST<Key, Value> {
 
     private Node first;
     public int compares = 0;
@@ -25,7 +26,7 @@ public class SequentialSearchST<Key, Value> {
         }
     }
 
-    public SequentialSearchST(){
+    public SequentialST(){
 
     }
 
@@ -94,7 +95,7 @@ public class SequentialSearchST<Key, Value> {
     }
 
     public Iterable<Key> keys(){
-        final SequentialSearchST<Key, Value> st = this;
+        final SequentialST<Key, Value> st = this;
         return new Iterable<Key>() {
             @Override
             public Iterator<Key> iterator() {
@@ -117,5 +118,13 @@ public class SequentialSearchST<Key, Value> {
                 };
             }
         };
+    }
+
+    public int compares(){
+        return this.compares;
+    }
+
+    public void reset(){
+        this.compares = 0;
     }
 }

@@ -1,6 +1,5 @@
 package com.github.trpedersen.search;
 
-import com.github.trpedersen.util.VisualAccumulator;
 import edu.princeton.cs.introcs.StdOut;
 import edu.princeton.cs.introcs.StdRandom;
 
@@ -9,63 +8,90 @@ import edu.princeton.cs.introcs.StdRandom;
  */
 public class SearchClient {
 
-    public static void main(String[] args){
-//        SequentialSearchST<String, String> search = new SequentialSearchST<String, String>();
+    public static void main(String[] args) {
+        OrderedST<String, Integer> search = new BinaryST<String, Integer>(100);
 
-//        search.put("a", "1");
-//        search.put("b", "1");
-//        search.put("c", "1");
-//
-//        assert(search.get("a").equals("1"));
-//        assert(search.get("b").equals("1"));
-//        assert(search.get("c").equals("1"));
+        search.put("a", 1);
+        search.put("b", 2);
+        search.put("c", 3);
+        search.put("d", 4);
 
-//        search.keys().forEach( key ->
-//                StdOut.println(key)
-//        );
-//
-//        search.delete("b");
-//        assert(search.get("b") == null);
-//
-//        search.keys().forEach( key ->
-//                        StdOut.println(key)
-//        );
+        search.deleteMin();
+        assert (search.get("a") == null);
+        assert (search.get("b").equals(2));
+        assert (search.get("c").equals(3));
+        search.deleteMax();
+        assert (search.get("d") == null);
 
-        SequentialSearchST<Integer, Integer> searchInt; // = new SequentialSearchST<Integer, Integer>();
-        searchInt = new SequentialSearchST<Integer, Integer>();
-        VisualAccumulator accum = new VisualAccumulator(11000, 200);
-        for(int i = 0; i < 10000; i++){
-            //searchInt = new SequentialSearchST<Integer, Integer>();
-           // for( int j = 0; j < i; j++) {
-                searchInt.put(StdRandom.uniform(100), i);
-                accum.addDataValue(searchInt.compares);
-            StdOut.printf("i: %d, i^2/2: %d, compares: %d\n", i, (i*i)/2, searchInt.compares);
-                searchInt.compares = 0;
+        assert(search.ceiling("c").equals("c"));
+        assert(search.floor("c").equals("c"));
+        search.delete("c");
+        assert(search.ceiling("c")== null);
+        assert(search.floor("c").equals("b"));
 
-          //  }
+        assert(search.ceiling("b").equals("b"));
+        assert(search.floor("b").equals("b"));
+        search.delete("a");
+        search.delete("b");
+        assert(search.ceiling("b") == null);
+        assert(search.floor("b") == null);
+
+        search.keys().forEach(key ->
+                        StdOut.printf("%s: %d, ", key, search.get(key))
+        );
+
+        search.delete("b");
+        assert (search.get("b") == null);
+
+        search.keys().forEach(key ->
+                        StdOut.printf("%s: %d, ", key, search.get(key))
+        );
+
+        OrderedST<Integer, Integer> searchInt; // = new SequentialST<Integer, Integer>();
+//        //searchInt = new SequentialST<Integer, Integer>(); //
+        searchInt = new BinaryST<Integer, Integer>(1000);
+        // VisualAccumulator accum = new VisualAccumulator(11000, 200);
+        for (int i = 0; i < 1000; i++) {
+            //searchInt = new SequentialST<Integer, Integer>();
+            // for( int j = 0; j < i; j++) {
+            searchInt.put(StdRandom.uniform(1000), i);
+            //  accum.addDataValue(searchInt.compares());
+            if(i % 100 == 0) {
+               // StdOut.printf("i: %d, i^2/2: %d, compares: %d\n", i, (i * i) / 2, searchInt.compares());
+                StdOut.printf("i: %d, compares: %d\n", i, searchInt.compares());
+            }
+            searchInt.reset();
+
+            //  }
         }
 
-//        searchInt.keys().forEach( key ->
-//                        StdOut.printf("%d ", key)
-//        );
+        searchInt.keys().forEach( key ->
+                        StdOut.printf("%d: %d, ", key, searchInt.get(key))
+        );
 
+        StdOut.println();
+
+        searchInt.keys(560, 602).forEach(key ->
+                        StdOut.printf("%d: %d, ", key, searchInt.get(key))
+        );
+//
 //        StdOut.println();
 
 //        for(int i = 0; i < 1000; i++){
 //            searchInt.delete(i);
 //        }
 
-//        while(!searchInt.isEmpty()){
+//        while (!searchInt.isEmpty()) {
 //            int i = StdRandom.uniform(1000);
 //            searchInt.delete(i);
 //            StdOut.printf("i: %d, size: %d\n", i, searchInt.size());
 ////            searchInt.keys().forEach( key ->
 ////                            StdOut.printf("%d ", key)
 ////            );
-//           // StdOut.println();
+//            // StdOut.println();
 //        }
 //        StdOut.println();
-//        searchInt.keys().forEach( key ->
+//        searchInt.keys().forEach(key ->
 //                        StdOut.printf("%d ", key)
 //        );
 
