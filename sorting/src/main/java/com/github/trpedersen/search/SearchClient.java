@@ -73,31 +73,49 @@ public class SearchClient {
 //                        StdOut.printf("%s: %d, ", key, search.get(key))
 //        );
 
-        OrderedST<Integer, Integer> searchInt; // = new SequentialST<Integer, Integer>();
+        RedBlackTree<Integer, Integer> searchInt; // = new SequentialST<Integer, Integer>();
 ////        //searchInt = new SequentialST<Integer, Integer>(); //
-        searchInt = new BinarySearchTree<Integer, Integer>();
+        searchInt = new RedBlackTree<Integer, Integer>();
 //        // VisualAccumulator accum = new VisualAccumulator(11000, 200);
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 10000000; i++) {
             //searchInt = new SequentialST<Integer, Integer>();
             // for( int j = 0; j < i; j++) {
-            searchInt.put(StdRandom.uniform(1000000), i);
+            searchInt.put(StdRandom.uniform(2000000), i);
+            //searchInt.put(i, i);
             //  accum.addDataValue(searchInt.compares());
-            if (i % 10000 == 0) {
-                // StdOut.printf("i: %d, i^2/2: %d, compares: %d\n", i, (i * i) / 2, searchInt.compares());
-                StdOut.printf("i: %d, compares: %d\n", i, searchInt.compares());
+            if (i % 1000000 == 0) {
+                StdOut.printf("key %d: N: %d, cmp: %d rl: %d, rr: %d, fc: %d\n", i, searchInt.size()
+                        , searchInt.compares()
+                        , searchInt.getRotateLefts()
+                        , searchInt.getRotateRights()
+                        , searchInt.getFlipColours());
+            }
+            //searchInt.reset();
+
+        }
+
+        StdOut.printf("N: %d, cmp: %d rl: %d, rr: %d, fc: %d\n", searchInt.size()
+                , searchInt.compares()
+                , searchInt.getRotateLefts()
+                , searchInt.getRotateRights()
+                , searchInt.getFlipColours());
+
+        int count = 0;
+        for (int i = 0; i < 1000000; i++) {
+            int key = StdRandom.uniform(2000000);
+            Integer value = searchInt.get(key);
+            if(value == null) StdOut.printf("miss: %d\n", key);
+            if (count % 10000 == 0) {
+                StdOut.printf("key %d:, value: %d, N: %d, cmp: %d\n", key, value
+                        , searchInt.size()
+                        , searchInt.compares()
+                );
             }
             searchInt.reset();
-
-            //  }
-        }
-//
-        int count = 0;
-        for (int key : searchInt.keys()) {
-            if (count % 1000 == 0) {
-                StdOut.printf("%d: %d, ", key, searchInt.get(key));
-            }
             count++;
         }
+
+
 //
 //        StdOut.println();
 //
