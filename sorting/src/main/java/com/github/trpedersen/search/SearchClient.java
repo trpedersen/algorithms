@@ -2,6 +2,7 @@ package com.github.trpedersen.search;
 
 import edu.princeton.cs.introcs.StdOut;
 import edu.princeton.cs.introcs.StdRandom;
+import org.StructureGraphic.v1.DSutils;
 
 /**
  * Created by timpe_000 on 7/07/2015.
@@ -77,13 +78,13 @@ public class SearchClient {
 ////        //searchInt = new SequentialST<Integer, Integer>(); //
         searchInt = new RedBlackTree<Integer, Integer>();
 //        // VisualAccumulator accum = new VisualAccumulator(11000, 200);
-        for (int i = 0; i < 10000000; i++) {
+        for (int i = 0; i < 10; i++) {
             //searchInt = new SequentialST<Integer, Integer>();
             // for( int j = 0; j < i; j++) {
-            searchInt.put(StdRandom.uniform(2000000), i);
+            searchInt.put(StdRandom.uniform(20), i);
             //searchInt.put(i, i);
             //  accum.addDataValue(searchInt.compares());
-            if (i % 1000000 == 0) {
+            if (i % 10 == 0) {
                 StdOut.printf("key %d: N: %d, cmp: %d rl: %d, rr: %d, fc: %d\n", i, searchInt.size()
                         , searchInt.compares()
                         , searchInt.getRotateLefts()
@@ -100,20 +101,22 @@ public class SearchClient {
                 , searchInt.getRotateRights()
                 , searchInt.getFlipColours());
 
+        DSutils.show(searchInt.getRoot(), 20, 15);
+
         int count = 0;
-        for (int i = 0; i < 1000000; i++) {
-            int key = StdRandom.uniform(2000000);
-            Integer value = searchInt.get(key);
-            if(value == null) StdOut.printf("miss: %d\n", key);
-            if (count % 10000 == 0) {
-                StdOut.printf("key %d:, value: %d, N: %d, cmp: %d\n", key, value
-                        , searchInt.size()
-                        , searchInt.compares()
-                );
-            }
-            searchInt.reset();
-            count++;
-        }
+//        for (int i = 0; i < 1000000; i++) {
+//            int key = StdRandom.uniform(2000000);
+//            Integer value = searchInt.get(key);
+//            if(value == null) StdOut.printf("miss: %d\n", key);
+//            if (count % 10000 == 0) {
+//                StdOut.printf("key %d:, value: %d, N: %d, cmp: %d\n", key, value
+//                        , searchInt.size()
+//                        , searchInt.compares()
+//                );
+//            }
+//            searchInt.reset();
+//            count++;
+//        }
 
 
 //
@@ -130,18 +133,25 @@ public class SearchClient {
 //        }
 
 //        while (!searchInt.isEmpty()) {
-//            int i = StdRandom.uniform(1000);
-//            searchInt.delete(i);
-//            StdOut.printf("i: %d, size: %d\n", i, searchInt.size());
+//            int i = StdRandom.uniform(200);
+//            try {
+//                searchInt.delete(i);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            //StdOut.printf("i: %d, size: %d\n", i, searchInt.size());
 ////            searchInt.keys().forEach( key ->
 ////                            StdOut.printf("%d ", key)
 ////            );
 //            // StdOut.println();
 //        }
-//        StdOut.println();
-//        searchInt.keys().forEach(key ->
-//                        StdOut.printf("%d ", key)
-//        );
+        StdOut.println();
+        searchInt.keys().forEach(key -> {
+                    StdOut.printf("%d ", key);
+                    searchInt.delete(key);
+                    DSutils.show(searchInt.getRoot(), 20, 15);
+                }
+        );
 
     }
 }

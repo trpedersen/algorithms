@@ -1,7 +1,9 @@
 package com.github.trpedersen.search;
 
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.Queue;
+import org.StructureGraphic.v1.*;
 
 /**
  * Created by timpe_000 on 9/07/2015.
@@ -42,13 +44,16 @@ public class RedBlackTree<Key extends Comparable<? super Key>, Value>
     }
 
     private void flipColours(Node h) {
-        h.colour = RED;
-        h.left.colour = BLACK;
-        h.right.colour = BLACK;
+//        h.colour = RED;
+//        h.left.colour = BLACK;
+//        h.right.colour = BLACK;
+        h.colour = !h.colour;
+        h.left.colour = !h.left.colour;
+        h.right.colour = !h.right.colour;
         flipColours++;
     }
 
-    private class Node {
+    private class Node implements DSTreeNode{
         private Key key;
         private Value value;
         private Node left, right;
@@ -60,6 +65,25 @@ public class RedBlackTree<Key extends Comparable<? super Key>, Value>
             this.value = value;
             this.N = N;
             this.colour = colour;
+        }
+
+        @Override
+        public DSTreeNode[] DSgetChildren() {
+            return new DSTreeNode[]{left, right};
+        }
+
+        @Override
+        public Object DSgetValue() {
+            return key;
+        }
+
+        @Override
+        public Color DSgetColor() {
+            if(colour == RED){
+                return Color.RED;
+            } else {
+                return Color.BLACK;
+            }
         }
     }
 
@@ -130,25 +154,54 @@ public class RedBlackTree<Key extends Comparable<? super Key>, Value>
 
     @Override
     public void delete(Key key) {
+        if(!contains(key)){
+            return;
+        }
+        // if both children red, set root black
+        if(!isRed(root.left) && !isRed(root.right)){
+            root.colour = RED;
+        }
         root = delete(root, key);
+        if(!isEmpty()){
+            root.colour = BLACK;
+        }
     }
 
     private Node delete(Node node, Key key) {
         if (node == null) return null;
-        int cmp = key.compareTo(node.key);
-        if (cmp < 0) node.left = delete(node.left, key);
-        else if (cmp > 0) node.right = delete(node.right, key);
-        else {
-            // replace node with its successor
-            if (node.right == null) return node.left;
-            if (node.left == null) return node.right;
-            Node t = node;
-            node = min(t.right);
-            node.right = deleteMin(t.right);
-            node.left = t.left;
+        if(key.compareTo(node.key) < 0) {
+            try {
+                if (!isRed(node.left) && !isRed(node.left.left)) {
+                    node = moveRedLeft(node);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            node.left = delete(node.left, key);
+        } else {
+            if(isRed(node.left)){
+                node = rotateRight(node);
+            }
+            if(key.compareTo(node.key) == 0 && (node.right == null)){
+                return null;
+            }
+            try {
+                if(!isRed(node.right) && !isRed(node.right.left)){
+                    node = moveRedRight(node);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(key.compareTo(node.key) == 0){
+                Node x = min(node.right);
+                node.key = x.key;
+                node.value = x.value;
+                node.right = deleteMin(node.right);
+            } else {
+                node.right = delete(node.right, key);
+            }
         }
-        node.N = size(node.left) + size(node.right) + 1;
-        return node;
+        return balance(node);
     }
 
     @Override
@@ -187,6 +240,7 @@ public class RedBlackTree<Key extends Comparable<? super Key>, Value>
 
     @Override
     public Key min() {
+        if(isEmpty()) return null;
         Node node = min(root);
         if (node != null) {
             return node.key;
@@ -196,17 +250,20 @@ public class RedBlackTree<Key extends Comparable<? super Key>, Value>
     }
 
     private Node min(Node node) {
+        if(node == null) return null;
         if (node.left == null) return node;
         else return min(node.left);
     }
 
     @Override
     public Key max() {
-        return max(root);
+        if(root == null) return null;
+        return max(root).key;
     }
 
-    private Key max(Node node) {
-        if (node.right == null) return node.key;
+    private Node max(Node node) {
+        if(node == null) return null;
+        if (node.right == null) return node;
         else return max(node.right);
     }
 
@@ -263,6 +320,7 @@ public class RedBlackTree<Key extends Comparable<? super Key>, Value>
 
     @Override
     public Key select(int k) {
+        if(k < 0 || k >= size()) return null;
         Node node = select(root, k);
         if (node != null) {
             return node.key;
@@ -281,26 +339,86 @@ public class RedBlackTree<Key extends Comparable<? super Key>, Value>
 
     @Override
     public void deleteMin() {
+        if(isEmpty()){
+            return;
+        }
+        // if both children of root are black, set root to red
+        if( !isRed(root.left) && !isRed(root.right)){
+            root.colour = RED;
+        }
         root = deleteMin(root);
+        if(!isEmpty()) root.colour = BLACK;
     }
 
     private Node deleteMin(Node node) {
-        if (node.left == null) return node.right;
+
+        if(node.left == null) return null;
+        if(!isRed(node.left) && !isRed(node.left.left)){
+            node = moveRedLeft(node);
+        }
         node.left = deleteMin(node.left);
-        node.N = size(node.left) + size(node.right) + 1;
-        return node;
+        return balance(node);
+    }
+
+    private Node balance(Node h){
+        if(isRed(h.right))
+            h = rotateLeft(h);
+        if(isRed(h.left) && isRed(h.left.left))
+            h = rotateRight(h);
+        if(isRed(h.left) && isRed(h.right))
+            flipColours(h);
+        h.N = size(h.left) + size(h.right) + 1;
+        return h;
+    }
+
+    private Node moveRedLeft(Node h){
+        // assuming that h is readn and both h.left and h.left.left are black
+        // make h.left or one of its children red
+        flipColours(h);
+        if(isRed(h.right.left)){
+            h.right = rotateRight(h.right);
+            h = rotateLeft(h);
+            flipColours(h);
+        }
+        return h;
     }
 
     @Override
     public void deleteMax() {
+        if(isEmpty()){
+            return;
+        }
+        // if both children black, set root red
+        if(!isRed(root.left) && !isRed(root.right)){
+            root.colour = RED;
+        }
         root = deleteMax(root);
+        if(!isEmpty())
+            root.colour = BLACK;
     }
 
     private Node deleteMax(Node node) {
-        if (node.right == null) return node.left;
-        node.right = deleteMax(node.right);
-        node.N = size(node.left) + size(node.right) + 1;
-        return node;
+        if(isRed(node.left)){
+            node = rotateRight(node);
+        }
+        if(node.right == null){
+            return  null;
+        }
+        if(!isRed(node.right) && !isRed(node.right.left)){
+            node = moveRedRight(node);
+        }
+        return balance(node);
+    }
+
+    private Node moveRedRight(Node h){
+        // assuming that h is red and both h.right and h.right.left are black,
+        // make h.right or one of its children red
+        flipColours(h);
+        if(isRed(h.left.left)) {
+            h = rotateRight(h);
+            flipColours(h);
+        }
+        return h;
     }
 
     @Override
@@ -318,5 +436,18 @@ public class RedBlackTree<Key extends Comparable<? super Key>, Value>
 
     public int getFlipColours(){
         return flipColours;
+    }
+
+    public int getHeight(){
+        return getHeight(root);
+    }
+
+    public int getHeight(Node node){
+        if(node == null) return -1;
+        return 1 + Math.max(getHeight(node.left), getHeight(node.right));
+    }
+
+    public Node getRoot(){
+        return root;
     }
 }

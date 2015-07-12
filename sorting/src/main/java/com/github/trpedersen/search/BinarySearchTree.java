@@ -3,6 +3,7 @@ package com.github.trpedersen.search;
 import java.util.LinkedList;
 import java.util.Queue;
 
+
 /**
  * Created by timpe_000 on 9/07/2015.
  */
