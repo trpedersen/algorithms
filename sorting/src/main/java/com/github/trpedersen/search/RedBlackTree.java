@@ -74,7 +74,7 @@ public class RedBlackTree<Key extends Comparable<? super Key>, Value>
 
         @Override
         public Object DSgetValue() {
-            return key;
+            return key.toString();
         }
 
         @Override

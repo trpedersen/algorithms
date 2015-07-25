@@ -1,5 +1,7 @@
 package com.github.trpedersen.search;
 
+import com.github.trpedersen.util.Stopwatch;
+import edu.princeton.cs.introcs.StdIn;
 import edu.princeton.cs.introcs.StdOut;
 import edu.princeton.cs.introcs.StdRandom;
 import org.StructureGraphic.v1.DSutils;
@@ -9,116 +11,95 @@ import org.StructureGraphic.v1.DSutils;
  */
 public class SearchClient {
 
-    public static void main(String[] args) {
-//        OrderedST<String, Integer> search = new BinarySearchTree<String, Integer>();
-//
-//        search.put("f", 1);
-//        search.put("d", 2);
-//        // search.put("c", 3);
-//        search.put("g", 3);
-//        search.put("a", 4);
-//        search.put("b", 5);
-//
-////        search.deleteMin();
-////        assert (search.get("a") == null);
-////        assert (search.get("b").equals(2));
-////        assert (search.get("c").equals(3));
-////        search.deleteMax();
-////        assert (search.get("d") == null);
-//
-//        assert (search.ceiling("c").equals("d"));
-//        assert (search.floor("c").equals("b"));
+    public static class StringKey implements Comparable<StringKey>{
 
-        // assert(search.select(0).equals("a"));
-        // assert(search.select(1).equals("b"));
-        // assert(search.select(3).equals("f"));
+        private String key;
+        private String value;
 
-//        String key = search.select(0);
-//        key = search.select(1);
-//        key = search.select(2);
-//        key = search.select(3);
-//        key = search.select(4);
-
-//        int rank = search.rank("a");
-//        rank = search.rank("b");
-//        rank = search.rank("c");
-//        rank = search.rank("d");
-//        rank = search.rank("e");
-//        rank = search.rank("z");
-
-//        key = search.select(search.rank("z"));
-//
-//        search.keys().forEach(k ->
-//                        StdOut.printf("%s: %d, ", k, search.get(k))
-//        );
-
-//        search.delete("c");
-//        assert(search.ceiling("c")== null);
-//        assert(search.floor("c").equals("b"));
-
-//        assert(search.ceiling("b").equals("b"));
-//        assert(search.floor("b").equals("b"));
-//        search.delete("a");
-//        search.delete("b");
-//        assert(search.ceiling("b") == null);
-//        assert(search.floor("b") == null);
-
-//
-//        search.keys().forEach(key ->
-////                        StdOut.printf("%s: %d, ", key, search.get(key))
-////        );
-//        search.delete("b");
-//        assert (search.get("b") == null);
-
-//        search.keys().forEach(key ->
-//                        StdOut.printf("%s: %d, ", key, search.get(key))
-//        );
-
-        RedBlackTree<Integer, Integer> searchInt; // = new SequentialST<Integer, Integer>();
-////        //searchInt = new SequentialST<Integer, Integer>(); //
-        searchInt = new RedBlackTree<Integer, Integer>();
-//        // VisualAccumulator accum = new VisualAccumulator(11000, 200);
-        for (int i = 0; i < 10; i++) {
-            //searchInt = new SequentialST<Integer, Integer>();
-            // for( int j = 0; j < i; j++) {
-            searchInt.put(StdRandom.uniform(20), i);
-            //searchInt.put(i, i);
-            //  accum.addDataValue(searchInt.compares());
-            if (i % 10 == 0) {
-                StdOut.printf("key %d: N: %d, cmp: %d rl: %d, rr: %d, fc: %d\n", i, searchInt.size()
-                        , searchInt.compares()
-                        , searchInt.getRotateLefts()
-                        , searchInt.getRotateRights()
-                        , searchInt.getFlipColours());
-            }
-            //searchInt.reset();
-
+        public StringKey(String key, String value){
+            this.key = key;
+            this.value = value;
         }
 
-        StdOut.printf("N: %d, cmp: %d rl: %d, rr: %d, fc: %d\n", searchInt.size()
-                , searchInt.compares()
-                , searchInt.getRotateLefts()
-                , searchInt.getRotateRights()
-                , searchInt.getFlipColours());
+        @Override
+        public int compareTo(StringKey other) {
+            return this.key.compareTo(other.key);
+        }
+    }
 
-        DSutils.show(searchInt.getRoot(), 20, 15);
+    public static class IntegerKey implements Comparable<IntegerKey>{
 
-        int count = 0;
-//        for (int i = 0; i < 1000000; i++) {
-//            int key = StdRandom.uniform(2000000);
-//            Integer value = searchInt.get(key);
-//            if(value == null) StdOut.printf("miss: %d\n", key);
-//            if (count % 10000 == 0) {
-//                StdOut.printf("key %d:, value: %d, N: %d, cmp: %d\n", key, value
-//                        , searchInt.size()
-//                        , searchInt.compares()
-//                );
-//            }
-//            searchInt.reset();
-//            count++;
-//        }
+        private Integer key;
+        private Integer value;
+
+        public IntegerKey(Integer key, Integer value){
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public int compareTo(IntegerKey other) {
+            return this.key.compareTo(other.key);
+        }
+    }
+
+    static final int trials = 1000000;
+
+    public static void main(String[] args) {
 
 
+        //DSutils.show(searchInt.getRoot(), 20, 15);
+
+
+        for(int j = 0; j < 10; j++) {
+
+            Stopwatch sw = new Stopwatch();
+            RedBlackTree<String, Integer> s1 = new RedBlackTree<>();
+
+            for (int i = 0; i < trials; i++) {
+                // int key = StdRandom.uniform(2000000);
+                String key = String.format("d", i);
+                s1.put(key, i);
+                Integer value = s1.get(key);
+                if (value != i) {
+                    StdOut.printf("boom: value: %d, i: %d", value, i);
+                }
+            }
+            double elapsed = sw.elapsedTime();
+            StdOut.printf("s1 done, size: %d, height: %d, time: %f\n", s1.size(), s1.getHeight(), elapsed);
+
+            sw = new Stopwatch();
+            RedBlackTree<IntegerKey, Integer> searchInt = new RedBlackTree<>();
+
+            for (int i = 0; i < trials; i++) {
+                // int key = StdRandom.uniform(2000000);
+                IntegerKey key = new IntegerKey(i, i);
+                searchInt.put(key, i);
+                Integer value = searchInt.get(key);
+                if (value != i) {
+                    StdOut.printf("boom: value: %d, i: %d", value, i);
+                }
+            }
+            elapsed = sw.elapsedTime();
+            StdOut.printf("ints done, size: %d, height: %d, time: %f\n", searchInt.size(), searchInt.getHeight(), elapsed);
+
+
+            sw = new Stopwatch();
+            RedBlackTree<StringKey, String> strings = new RedBlackTree<>();
+
+            for (Integer i = 0; i < trials; i++) {
+                // int key = StdRandom.uniform(2000000);
+                String s = i.toString();
+                StringKey key = new StringKey(s, s);
+                strings.put(key, s);
+                String value = strings.get(key);
+                if (!value.equals(s)) {
+                    StdOut.printf("boom: value: %s, i: %s", value, s);
+                }
+            }
+            elapsed = sw.elapsedTime();
+            StdOut.printf("strings done, size: %d, height: %d, time: %f\n", strings.size(), strings.getHeight(), elapsed);
+        }
 //
 //        StdOut.println();
 //
@@ -145,13 +126,32 @@ public class SearchClient {
 ////            );
 //            // StdOut.println();
 //        }
-        StdOut.println();
-        searchInt.keys().forEach(key -> {
-                    StdOut.printf("%d ", key);
-                    searchInt.delete(key);
-                    DSutils.show(searchInt.getRoot(), 20, 15);
-                }
-        );
 
+//        searchInt.keys().forEach(key -> {
+//                    StdOut.printf("%d ", key);
+//                    searchInt.delete(key);
+//                    DSutils.show(searchInt.getRoot(), 20, 15);
+//                }
+//        );
+
+//        while(!searchInt.isEmpty()){
+//            int key = StdIn.readInt();
+//            searchInt.delete(key);
+//            DSutils.show(searchInt.getRoot(), 20, 15);
+//        }
+
+//        RedBlackTree<Character, Character> st2 = new RedBlackTree<>();
+//
+//        for(Character c: "flower".toCharArray()){
+//            st2.put(c, c);
+//        }
+//
+//        DSutils.show(st2.getRoot(), 20, 15);
+//
+//        while(!st2.isEmpty()){
+//            Character key = StdIn.readChar();
+//            st2.delete(key);
+//            DSutils.show(st2.getRoot(), 20, 15);
+//        }
     }
 }

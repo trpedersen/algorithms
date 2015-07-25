@@ -1,8 +1,9 @@
 package com.github.trpedersen.search;
 
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.Queue;
-
+import org.StructureGraphic.v1.*;
 
 /**
  * Created by timpe_000 on 9/07/2015.
@@ -12,7 +13,7 @@ public class BinarySearchTree<Key extends Comparable<? super Key>, Value>
 
     private Node root;
 
-    private class Node {
+    private class Node implements DSTreeNode{
         private Key key;
         private Value value;
         private Node left, right;
@@ -22,6 +23,21 @@ public class BinarySearchTree<Key extends Comparable<? super Key>, Value>
             this.key = key;
             this.value = value;
             this.N = N;
+        }
+
+        @Override
+        public DSTreeNode[] DSgetChildren() {
+            return new DSTreeNode[]{left, right};
+        }
+
+        @Override
+        public Object DSgetValue() {
+            return key;
+        }
+
+        @Override
+        public Color DSgetColor() {
+            return Color.BLACK;
         }
     }
 
@@ -257,5 +273,9 @@ public class BinarySearchTree<Key extends Comparable<? super Key>, Value>
     @Override
     public int size(Key lo, Key hi) {
         return 0;
+    }
+
+    public Node getRoot(){
+        return root;
     }
 }
