@@ -1,4 +1,4 @@
-# algorithms
+## algorithms
 
 This is just a repo to hold code I've hacked together while working through Sedgewick's Algorithms.
 
